@@ -42,27 +42,6 @@ socks5_config(){
 # 提示用户输入socks5端口号
 read -p "请输入socks5端口号: " SOCKS5_PORT
 
-# 生成socks5.js文件
-cat <<EOF > socks5.js
-'use strict';
-
-const socks5 = require('node-socks5-server');
-
-const users = {
-  'user': 'password',
-};
-
-const userPassAuthFn = (user, password) => {
-  if (users[user] === password) return true;
-  return false;
-};
-
-const server = socks5.createServer({
-  userPassAuthFn,
-});
-server.listen($SOCKS5_PORT);
-EOF
-
 # 提示用户输入用户名和密码
 read -p "请输入socks5用户名: " SOCKS5_USER
 
@@ -76,9 +55,26 @@ while true; do
   fi
 done
 
-# 修改socks5.js文件中的用户名和密码
-sed -i '' "s/'user': 'password'/'$SOCKS5_USER': '$SOCKS5_PASS'/" socks5.js
-}
+# 生成socks5.js文件
+cat <<EOF > socks5.js
+'use strict';
+
+const socks5 = require('node-socks5-server');
+
+const users = {
+  '$SOCKS5_USER': '$SOCKS5_PASS',
+};
+
+const userPassAuthFn = (user, password) => {
+  if (users[user] === password) return true;
+  return false;
+};
+
+const server = socks5.createServer({
+  userPassAuthFn,
+});
+server.listen($SOCKS5_PORT);
+EOF
 
 install_socks5(){
   cd "$SOCKS5_DIR"
@@ -271,7 +267,7 @@ echo "保存当前pm2进程列表"
 pm2 save
 
 echo "定义要添加的cron任务"
-CRON_JOB="*/12 * * * * /home/$USER/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect >> /home/$USER/pm2_resurrect.log 2>&1"
+CRON_JOB="*/12 * * * * /home/$(whoami)/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect >> /home/$(whoami)/pm2_resurrect.log 2>&1"
 
 echo "检查crontab是否已存在该任务"
 (crontab -l | grep -F "$CRON_JOB") || (crontab -l; echo "$CRON_JOB") | crontab -
