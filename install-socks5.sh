@@ -123,6 +123,7 @@ install_socks5(){
 
   # 启动socks5.js代理
   echo "正在启动socks5代理..."
+  # pm2 start /home/$(whoami)/socks5/socks5.js --name socks_proxy
   pm2 start $SOCKS5_JS --name socks_proxy
 
   # 延迟检测以确保代理启动
@@ -260,7 +261,7 @@ read -p "是否安装nezha-agent(输入Y安装): " choice
 if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
     echo "正在安装nezha-agent..."
     install_nezha_agent
-    pm2 start /home/$USER/.nezha-agent/start.sh --name nezha-agent
+    pm2 start /home/$(whoami)/.nezha-agent/start.sh --name nezha-agent
 else
     echo "不安装nezha-agent"
 fi
@@ -269,7 +270,7 @@ echo "保存当前pm2进程列表"
 pm2 save
 
 echo "定义要添加的cron任务"
-CRON_JOB="*/5 * * * * /home/$USER/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect >> /home/$USER/pm2_resurrect.log 2>&1"
+CRON_JOB="*/12 * * * * /home/$USER/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect >> /home/$USER/pm2_resurrect.log 2>&1"
 
 echo "检查crontab是否已存在该任务"
 (crontab -l | grep -F "$CRON_JOB") || (crontab -l; echo "$CRON_JOB") | crontab -
