@@ -7,6 +7,7 @@ echo -e "\e[32m
  \___ \| | | | |   | ' /\___ \___ \ 
   ___) | |_| | |___| . \ ___) |__) |           不要直连
  |____/ \___/ \____|_|\_\____/____/            没有售后   
+ 缝合怪：cmliu 原作者们：RealNeoMan、k0baya
 \e[0m"
 
 # 获取当前用户名
@@ -275,4 +276,4 @@ echo "检查crontab是否已存在该任务"
 
 echo "使用crontab守护pm2进程"
 pm2 list
-echo "脚本执行完成。致谢：RealNeoMan、k0baya、Neomanbeta"
+echo "脚本执行完成。致谢：RealNeoMan、k0baya"
