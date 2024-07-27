@@ -6,4 +6,4 @@ bash <(curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/in
 ```
 
 # 致谢
-[RealNeoMan](https://t.me/RealNeoMan)、[k0baya](https://github.com/k0baya)
+[RealNeoMan](https://github.com/Neomanbeta/ct8socks)、[k0baya](https://github.com/k0baya)
