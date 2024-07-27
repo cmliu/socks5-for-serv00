@@ -165,6 +165,7 @@ else
   # 创建socks5目录
   echo "正在创建socks5目录..."
   mkdir -p "$SOCKS5_DIR"
+  install_socks5
 fi
 
 USERNAME=$(whoami)
