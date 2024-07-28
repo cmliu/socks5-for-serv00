@@ -267,10 +267,11 @@ echo "保存当前pm2进程列表"
 pm2 save
 
 echo "定义要添加的cron任务"
-CRON_JOB="*/5 * * * * /home/$(whoami)/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect >> /home/$(whoami)/pm2_resurrect.log 2>&1"
+CRON_JOB="*/12 * * * * /home/$(whoami)/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect >> /home/$(whoami)/pm2_resurrect.log 2>&1"
+COMMAND_PATH="/home/$(whoami)/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect"
 
-echo "检查crontab是否已存在该任务"
-(crontab -l | grep -F "$CRON_JOB") || (crontab -l; echo "$CRON_JOB") | crontab -
+echo "检查 crontab 是否已存在该任务"
+(crontab -l | grep -F "$COMMAND_PATH") || (crontab -l; echo "$CRON_JOB") | crontab -
 
 echo "使用crontab守护pm2进程"
 pm2 list
