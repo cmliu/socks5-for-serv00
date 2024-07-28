@@ -219,6 +219,26 @@ install_nezha_agent(){
   [ -e ${WORKDIR}/start.sh ] && run_agent
 }
 
+install_pm2(){
+  echo "创建一个名为 .npm-global 的目录，用于存放全局安装的 npm 包。"
+  mkdir -p ~/.npm-global 
+
+  echo "设置 npm 的全局安装路径为 ~/.npm-global，这样全局安装的包会放在这个目录下。"
+  npm config set prefix '~/.npm-global'
+
+  echo "将 ~/.npm-global/bin 添加到系统的 PATH 环境变量中，这样可以在终端中直接运行全局安装的 npm 包命令。"
+  echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
+
+  echo "重新加载 .profile 文件，使刚才添加的 PATH 环境变量立即生效。"
+  source ~/.profile
+
+  echo "全局安装 pm2，这是一个用于管理和监控 Node.js 应用的工具。"
+  npm install -g pm2
+
+  echo "再次重新加载 .profile 文件，确保所有的环境变量和路径配置都生效。"
+  source ~/.profile
+}
+
 ########################梦开始的地方###########################
 
 # 检查pm2是否已安装并可用
@@ -227,8 +247,8 @@ if command -v pm2 > /dev/null 2>&1 && [[ $(which pm2) == "/home/${USER,,}/.npm-g
 else
   # 安装pm2
   echo "正在安装pm2，请稍候..."
-  curl -s https://raw.githubusercontent.com/k0baya/alist_repl/main/serv00/install-pm2.sh | bash
-
+  #curl -s https://raw.githubusercontent.com/k0baya/alist_repl/main/serv00/install-pm2.sh | bash
+  install_pm2
   if [ $? -ne 0 ]; then
     echo "pm2安装失败，请检查网络连接或稍后再试。"
     exit 1
