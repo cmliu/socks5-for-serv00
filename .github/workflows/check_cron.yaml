@@ -27,10 +27,10 @@ jobs:
 
       - name: Execute SSH Commands
         run: |
-          while read -r account; do
-            username=$(echo $account | jq -r '.username')
-            password=$(echo $account | jq -r '.password')
-            ssh=$(echo $account | jq -r '.ssh')
+          while IFS= read -r account; do
+            username=$(echo "$account" | jq -r '.username')
+            password=$(echo "$account" | jq -r '.password')
+            ssh=$(echo "$account" | jq -r '.ssh')
 
             echo "Executing for $username@$ssh"
             sshpass -p "$password" ssh -o StrictHostKeyChecking=no "$username@$ssh" 'bash <(curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/check_cron.sh)'
