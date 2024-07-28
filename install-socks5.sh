@@ -75,6 +75,7 @@ const server = socks5.createServer({
 });
 server.listen($SOCKS5_PORT);
 EOF
+}
 
 install_socks5(){
   cd "$SOCKS5_DIR"
