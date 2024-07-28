@@ -112,6 +112,8 @@ install_socks5(){
     else
       socks5_config
     fi
+  else
+    socks5_config
   fi
 
   # 检查并删除已存在的同名pm2进程
