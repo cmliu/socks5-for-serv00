@@ -7,7 +7,7 @@ bash <(curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/in
 ```
 
 ## Github Actions保活
-添加`secrets.ACCOUNTS_JSON`变量
+添加 Secrets.`ACCOUNTS_JSON` 变量
 ```
 [
   {"username": "cmliusss", "password": "7HEt(xeRxttdvgB^nCU6", "panel": "panel4.serv00.com", "ssh": "s4.serv00.com"},
