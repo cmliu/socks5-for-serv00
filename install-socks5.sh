@@ -196,8 +196,9 @@ run_agent(){
         echo "如果面板处未上线，请检查参数是否填写正确，并停止 agent 进程，删除已安装的 agent 后重新安装！"
         echo "停止 agent 进程的命令：pgrep -f 'nezha-agent' | xargs -r kill"
         echo "删除已安装的 agent 的命令：rm -rf ~/.nezha-agent"
-        echo
-        echo "如果你想使用 pm2 管理 agent 进程，请执行：pm2 start ~/.nezha-agent/start.sh --name nezha-agent"
+        #echo
+        #echo "如果你想使用 pm2 管理 agent 进程，请执行：pm2 start ~/.nezha-agent/start.sh --name nezha-agent"
+        pm2 start /home/$(whoami)/.nezha-agent/start.sh --name nezha-agent
     else
         rm -rf "${WORKDIR}"
         echo "nezha-agent 启动失败，请检查参数填写是否正确，并重新安装！"
@@ -272,19 +273,18 @@ choice=${choice^^} # 转换为大写
 if [ "$choice" == "Y" ]; then
   echo "正在安装nezha-agent..."
   install_nezha_agent
-  pm2 start /home/$(whoami)/.nezha-agent/start.sh --name nezha-agent
 else
   echo "不安装nezha-agent"
 fi
 
-read -p "是否保存当前pm2进程列表(Y/N): " pm2save
+read -p "是否保存当前pm2进程列表(Y/N)不理解的用户回车即可: " pm2save
 pm2save=${pm2save^^} # 转换为大写
-if [ "$pm2save" == "Y" ]; then
+if [ "$pm2save" != "N" ]; then
   echo "保存当前pm2进程列表"
   pm2 save
-  read -p "是否使用crontab守护pm2进程(Y/N): " crontabpm2
+  read -p "是否使用crontab守护pm2进程(Y/N)不理解的用户回车即可: " crontabpm2
   crontabpm2=${crontabpm2^^} # 转换为大写
-  if [ "$crontabpm2" == "Y" ]; then
+  if [ "$crontabpm2" != "N" ]; then
     echo "添加crontab守护pm2进程"
     curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/check_cron.sh | bash
   fi
