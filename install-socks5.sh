@@ -12,33 +12,11 @@ echo -e "\e[32m
 
 # 获取当前用户名
 USER=$(whoami)
-USERNAME=$(whoami)
-WORKDIR="/home/${USERNAME}/.nezha-agent"
+SOCKS5_DIR=/home/${USER,,}/socks5
+SOCKS5_JS="$SOCKS5_DIR/socks5.js"
+WORKDIR="/home/${USER,,}/.nezha-agent"
 
-# 检查pm2是否已安装并可用
-if command -v pm2 > /dev/null 2>&1 && [[ $(which pm2) == "/home/${USER,,}/.npm-global/bin/pm2" ]]; then
-  echo "pm2已安装且可用，跳过安装步骤。"
-else
-  # 安装pm2
-  echo "正在安装pm2，请稍候..."
-  curl -s https://raw.githubusercontent.com/k0baya/alist_repl/main/serv00/install-pm2.sh | bash
-
-  if [ $? -ne 0 ]; then
-    echo "pm2安装失败，请检查网络连接或稍后再试。"
-    exit 1
-  fi
-  echo "pm2安装成功。按任意键断开后重新连接SSH后再运行此脚本。"
-  read -n 1 -s -r -p ""  # 等待用户按任意键
-    
-  echo -e "\n断开SSH连接..."
-  exit  # 断开SSH连接
-  
-  # 检查pm2路径
-  if [[ $(which pm2) != "/home/${USER,,}/.npm-global/bin/pm2" ]]; then
-    echo "pm2未正确配置。请断开并重新连接SSH后再运行此脚本。"
-    exit 1
-  fi
-fi
+###################################################
 
 socks5_config(){
 # 提示用户输入socks5端口号
@@ -58,7 +36,7 @@ while true; do
 done
 
 # 生成socks5.js文件
-cat <<EOF > socks5.js
+cat <<EOF > $SOCKS5_JS
 'use strict';
 
 const socks5 = require('node-socks5-server');
@@ -102,7 +80,7 @@ install_socks5(){
   fi
 
   # 检查socks5.js文件是否存在
-  SOCKS5_JS="$SOCKS5_DIR/socks5.js"
+  
   if [ -f "$SOCKS5_JS" ]; then
     read -p "当前目录下已经有socks5.js文件，是否要覆盖？(输入Y覆盖): " OVERWRITE_FILE
     OVERWRITE_FILE=${OVERWRITE_FILE^^} # 转换为大写
@@ -110,9 +88,11 @@ install_socks5(){
       echo "文件不覆盖。"
       #exit 1
     else
+      echo "配置socks5.js文件"
       socks5_config
     fi
   else
+    echo "配置socks5.js文件"
     socks5_config
   fi
 
@@ -238,11 +218,38 @@ install_nezha_agent(){
   [ -e ${WORKDIR}/start.sh ] && run_agent
 }
 
+########################梦开始的地方###########################
+
+# 检查pm2是否已安装并可用
+if command -v pm2 > /dev/null 2>&1 && [[ $(which pm2) == "/home/${USER,,}/.npm-global/bin/pm2" ]]; then
+  echo "pm2已安装且可用，跳过安装步骤。"
+else
+  # 安装pm2
+  echo "正在安装pm2，请稍候..."
+  curl -s https://raw.githubusercontent.com/k0baya/alist_repl/main/serv00/install-pm2.sh | bash
+
+  if [ $? -ne 0 ]; then
+    echo "pm2安装失败，请检查网络连接或稍后再试。"
+    exit 1
+  fi
+  echo "pm2安装成功。按任意键断开后重新连接SSH后再运行此脚本。"
+  read -n 1 -s -r -p ""  # 等待用户按任意键
+    
+  echo -e "\n断开SSH连接..."
+  exit  # 断开SSH连接
+  
+  # 检查pm2路径
+  if [[ $(which pm2) != "/home/${USER,,}/.npm-global/bin/pm2" ]]; then
+    echo "pm2未正确配置。请断开并重新连接SSH后再运行此脚本。"
+    exit 1
+  fi
+fi
+
 read -p "是否安装socks5(Y/N): " socks5choice
 socks5choice=${socks5choice^^} # 转换为大写
 if [ "$socks5choice" == "Y" ]; then
   # 检查socks5目录是否存在
-  SOCKS5_DIR=/home/${USER,,}/socks5
+  
   if [ -d "$SOCKS5_DIR" ]; then
     read -p "目录$SOCKS5_DIR已经存在，是否继续安装？(Y/N): " CONTINUE_INSTALL
     CONTINUE_INSTALL=${CONTINUE_INSTALL^^} # 转换为大写
