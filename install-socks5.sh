@@ -12,6 +12,8 @@ echo -e "\e[32m
 
 # 获取当前用户名
 USER=$(whoami)
+USERNAME=$(whoami)
+WORKDIR="/home/${USERNAME}/.nezha-agent"
 
 # 检查pm2是否已安装并可用
 if command -v pm2 > /dev/null 2>&1 && [[ $(which pm2) == "/home/${USER,,}/.npm-global/bin/pm2" ]]; then
@@ -147,27 +149,6 @@ install_socks5(){
   fi
 }
 
-# 检查socks5目录是否存在
-SOCKS5_DIR=/home/${USER,,}/socks5
-if [ -d "$SOCKS5_DIR" ]; then
-  read -p "目录$SOCKS5_DIR已经存在，是否继续安装？(Y/N): " CONTINUE_INSTALL
-  CONTINUE_INSTALL=${CONTINUE_INSTALL^^} # 转换为大写
-  if [ "$CONTINUE_INSTALL" != "Y" ]; then
-    echo "安装已取消。"
-    #exit 1
-  else
-    install_socks5
-  fi
-else
-  # 创建socks5目录
-  echo "正在创建socks5目录..."
-  mkdir -p "$SOCKS5_DIR"
-  install_socks5
-fi
-
-USERNAME=$(whoami)
-WORKDIR="/home/${USERNAME}/.nezha-agent"
-
 download_agent() {
     DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_freebsd_amd64.zip"
     if ! wget -qO "$ZIP_FILE" "$DOWNLOAD_LINK"; then
@@ -254,6 +235,28 @@ install_nezha_agent(){
   rm -rf "${TMP_DIRECTORY}"
   [ -e ${WORKDIR}/start.sh ] && run_agent
 }
+
+read -p "是否安装socks5(Y/N): " socks5choice
+socks5choice=${socks5choice^^} # 转换为大写
+if [ "$socks5choice" == "Y" ]; then
+  # 检查socks5目录是否存在
+  SOCKS5_DIR=/home/${USER,,}/socks5
+  if [ -d "$SOCKS5_DIR" ]; then
+    read -p "目录$SOCKS5_DIR已经存在，是否继续安装？(Y/N): " CONTINUE_INSTALL
+    CONTINUE_INSTALL=${CONTINUE_INSTALL^^} # 转换为大写
+    if [ "$CONTINUE_INSTALL" != "Y" ]; then
+      echo "安装已取消。"
+      #exit 1
+    else
+      install_socks5
+    fi
+  else
+    # 创建socks5目录
+    echo "正在创建socks5目录..."
+    mkdir -p "$SOCKS5_DIR"
+    install_socks5
+  fi
+fi
 
 read -p "是否安装nezha-agent(Y/N): " choice
 choice=${choice^^} # 转换为大写
