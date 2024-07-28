@@ -15,14 +15,10 @@ jobs:
       - name: Get ACCOUNTS_JSON
         id: get-accounts
         run: |
-          if [ -n "${{ secrets.ACCOUNTS_JSON }}" ]; then
-            echo "${{ secrets.ACCOUNTS_JSON }}" > accounts.json
-          elif [ -n "${{ vars.ACCOUNTS_JSON }}" ]; then
-            echo "${{ vars.ACCOUNTS_JSON }}" > accounts.json
-          else
-            echo "No ACCOUNTS_JSON provided" && exit 1
-          fi
-        shell: bash
+          echo "$ACCOUNTS_JSON" > accounts.json
+        env:
+          ACCOUNTS_JSON: ${{ secrets.ACCOUNTS_JSON }}
+        # 从 GitHub Secrets 获取 ACCOUNTS_JSON 变量，并保存到文件 accounts.json
 
       - name: Read and parse ACCOUNTS_JSON
         id: parse-accounts
