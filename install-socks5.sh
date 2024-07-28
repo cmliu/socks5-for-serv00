@@ -2,7 +2,7 @@
 
 # 介绍信息
 echo -e "\e[32m
- ____   ___   ____ _  ______ ____  
+  ____   ___   ____ _  ______ ____  
  / ___| / _ \ / ___| |/ / ___| ___|  
  \___ \| | | | |   | ' /\___ \___ \ 
   ___) | |_| | |___| . \ ___) |__) |           不要直连
@@ -254,25 +254,28 @@ install_nezha_agent(){
   [ -e ${WORKDIR}/start.sh ] && run_agent
 }
 
-read -p "是否安装nezha-agent(输入Y安装): " choice
-if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
-    echo "正在安装nezha-agent..."
-    install_nezha_agent
-    pm2 start /home/$(whoami)/.nezha-agent/start.sh --name nezha-agent
+read -p "是否安装nezha-agent(Y/N): " choice
+choice=${choice^^} # 转换为大写
+if [ "$choice" == "Y" ]; then
+  echo "正在安装nezha-agent..."
+  install_nezha_agent
+  pm2 start /home/$(whoami)/.nezha-agent/start.sh --name nezha-agent
 else
-    echo "不安装nezha-agent"
+  echo "不安装nezha-agent"
 fi
 
-echo "保存当前pm2进程列表"
-pm2 save
+read -p "是否保存当前pm2进程列表(Y/N): " pm2save
+pm2save=${pm2save^^} # 转换为大写
+if [ "$pm2save" == "Y" ]; then
+  echo "保存当前pm2进程列表"
+  pm2 save
+  read -p "是否使用crontab守护pm2进程(Y/N): " crontabpm2
+  crontabpm2=${crontabpm2^^} # 转换为大写
+  if [ "$crontabpm2" == "Y" ]; then
+    echo "添加crontab守护pm2进程"
+    curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/check_cron.sh | bash
+  fi
+fi
 
-echo "定义要添加的cron任务"
-CRON_JOB="*/12 * * * * /home/$(whoami)/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect >> /home/$(whoami)/pm2_resurrect.log 2>&1"
-COMMAND_PATH="/home/$(whoami)/.npm-global/lib/node_modules/pm2/bin/pm2 resurrect"
-
-echo "检查 crontab 是否已存在该任务"
-(crontab -l | grep -F "$COMMAND_PATH") || (crontab -l; echo "$CRON_JOB") | crontab -
-
-echo "使用crontab守护pm2进程"
 pm2 list
 echo "脚本执行完成。致谢：RealNeoMan、k0baya"
