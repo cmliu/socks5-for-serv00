@@ -1,0 +1,41 @@
+name: Execute SSH Commands
+
+on:
+  workflow_dispatch: # 手动触发工作流
+  schedule:
+    - cron: "0 0,12 * * *"  # 每天早晚8点各运行一次
+
+jobs:
+  execute-commands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSHPass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Get ACCOUNTS_JSON
+        id: get-accounts
+        run: |
+          if [ -n "${{ secrets.ACCOUNTS_JSON }}" ]; then
+            echo "${{ secrets.ACCOUNTS_JSON }}" > accounts.json
+          elif [ -n "${{ vars.ACCOUNTS_JSON }}" ]; then
+            echo "${{ vars.ACCOUNTS_JSON }}" > accounts.json
+          else
+            echo "No ACCOUNTS_JSON provided" && exit 1
+          fi
+        shell: bash
+
+      - name: Read and parse ACCOUNTS_JSON
+        id: parse-accounts
+        run: |
+          jq -c '.[]' accounts.json > accounts_parsed.json
+
+      - name: Execute SSH Commands
+        run: |
+          while read -r account; do
+            username=$(echo $account | jq -r '.username')
+            password=$(echo $account | jq -r '.password')
+            ssh=$(echo $account | jq -r '.ssh')
+
+            echo "Executing for $username@$ssh"
+            sshpass -p "$password" ssh -o StrictHostKeyChecking=no "$username@$ssh" 'bash <(curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/check_cron.sh)'
+          done < accounts_parsed.json
