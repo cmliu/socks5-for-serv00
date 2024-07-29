@@ -187,7 +187,7 @@ install_nezha_agent(){
 
 ########################梦开始的地方###########################
 
-read -p "是否安装socks5(Y/N 回车N): " socks5choice
+read -p "是否安装 socks5 (Y/N 回车N): " socks5choice
 socks5choice=${socks5choice^^} # 转换为大写
 if [ "$socks5choice" == "Y" ]; then
   # 检查socks5目录是否存在
@@ -195,19 +195,21 @@ if [ "$socks5choice" == "Y" ]; then
     install_socks5
   else
     # 创建socks5目录
-    echo "正在创建socks5目录..."
+    echo "正在创建 socks5 目录..."
     mkdir -p "$FILE_PATH"
     install_socks5
   fi
+else
+  echo "不安装 socks5"
 fi
 
-read -p "是否安装nezha-agent(Y/N 回车N): " choice
+read -p "是否安装 nezha-agent (Y/N 回车N): " choice
 choice=${choice^^} # 转换为大写
 if [ "$choice" == "Y" ]; then
-  echo "正在安装nezha-agent..."
+  echo "正在安装 nezha-agent..."
   install_nezha_agent
 else
-  echo "不安装nezha-agent"
+  echo "不安装 nezha-agent"
 fi
 
 read -p "是否添加 crontab 守护进程的计划任务(Y/N 回车N): " crontabgogogo
