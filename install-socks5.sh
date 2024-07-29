@@ -220,6 +220,9 @@ install_nezha_agent(){
 }
 
 install_pm2(){
+  echo "清理 npm 安装目录"
+  rm -rf ~/.npm*
+  
   echo "创建一个名为 .npm-global 的目录，用于存放全局安装的 npm 包。"
   mkdir -p ~/.npm-global 
 
