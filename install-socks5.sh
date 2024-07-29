@@ -210,7 +210,7 @@ else
   echo "不安装nezha-agent"
 fi
 
-read -p "是否添加 crontab 守护进程的计划任务(Y/N 回车N): " crontab
+read -p "是否添加 crontab 守护进程的计划任务(Y/N 回车N): " crontabp
 crontabp=${crontabp^^} # 转换为大写
 if [ "$crontabp"  == "Y" ]; then
   echo "添加 crontab 守护进程的计划任务"
