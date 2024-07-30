@@ -221,25 +221,25 @@ install_nezha_agent(){
 
 install_pm2(){
   echo "清理 npm 安装目录"
-  rm -rf ~/domains/${USER,,}.serv00.net/logs/.npm*
+  rm -rf ~/.npm*
   
   echo "创建一个名为 .npm-global 的目录，用于存放全局安装的 npm 包。"
-  mkdir -p ~/domains/${USER,,}.serv00.net/logs/.npm-global 
+  mkdir -p ~/.npm-global 
 
   echo "设置 npm 的全局安装路径为 ~/.npm-global，这样全局安装的包会放在这个目录下。"
-  npm config set prefix '~/domains/${USER,,}.serv00.net/logs/.npm-global'
+  npm config set prefix '~/.npm-global'
 
   echo "将 ~/.npm-global/bin 添加到系统的 PATH 环境变量中，这样可以在终端中直接运行全局安装的 npm 包命令。"
-  echo 'export PATH=~/domains/${USER,,}.serv00.net/logs/.npm-global/bin:$PATH' >> ~/domains/${USER,,}.serv00.net/logs/.profile
+  echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
 
   echo "重新加载 .profile 文件，使刚才添加的 PATH 环境变量立即生效。"
-  source ~/domains/${USER,,}.serv00.net/logs/.profile
+  source ~/.profile
 
   echo "全局安装 pm2，这是一个用于管理和监控 Node.js 应用的工具。"
   npm install -g pm2
 
   echo "再次重新加载 .profile 文件，确保所有的环境变量和路径配置都生效。"
-  source ~/domains/${USER,,}.serv00.net/logs/.profile
+  source ~/.profile
 }
 
 ########################梦开始的地方###########################
