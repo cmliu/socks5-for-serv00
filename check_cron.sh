@@ -14,7 +14,7 @@ echo "检查并添加 crontab 任务"
 if command -v pm2 > /dev/null 2>&1 && [[ $(which pm2) == "/home/${USER,,}/.npm-global/bin/pm2" ]]; then
   echo "已安装 pm2 ，启用 pm2 保活任务"
   (crontab -l | grep -F "$REBOOT_COMMAND") || (crontab -l; echo "$REBOOT_COMMAND") | crontab -
-  (crontab -l | grep -F "* $PM2_PATH resurrect") || (crontab -l; echo "$CRON_JOB") | crontab -
+  (crontab -l | grep -F "$CRON_JOB") || (crontab -l; echo "$CRON_JOB") | crontab -
 else
   if [ -e "${WORKDIR}/start.sh" ] && [ -e "${FILE_PATH}/config.json" ]; then
     echo "添加 nezha & socks5 的 crontab 重启任务"
