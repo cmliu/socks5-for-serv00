@@ -12,6 +12,13 @@ bash <(curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/in
 bash <(curl -s https://raw.githubusercontent.com/cmliu/socks5-for-serv00/main/install-socks5-pm2.sh)
 ```
 
+卸载pm2
+```bash
+pm2 unstartup
+pm2 delete all
+npm uninstall -g pm2
+```
+
 ## Github Actions保活
 添加 Secrets.`ACCOUNTS_JSON` 变量
 ```json
