@@ -1,5 +1,4 @@
 # socks5-for-serv00
-Installation scripts for Socks5 on Serv00
 给 serv00 & ct8 机器一键安装 socks5 & nezha-agent
 
 ## 如何使用？
