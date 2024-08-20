@@ -99,14 +99,14 @@ install_socks5(){
       echo "代理创建成功，返回的IP是: $CURL_OUTPUT"
       SERV_DOMAIN=$CURL_OUTPUT
       # 查找并列出包含用户名的文件夹
-      found_folders=$(find "$DOMAIN_PATH" -type d -name "*$USER*")
+      found_folders=$(find "/home/${USER,,}/domains" -type d -name "*${USER,,}*")
       if [ -n "$found_folders" ]; then
           if echo "$found_folders" | grep -q "serv00.net"; then
               #echo "找到包含 'serv00.net' 的文件夹。"
-              SERV_DOMAIN="${USER}.serv00.net"
+              SERV_DOMAIN="${USER,,}.serv00.net"
           elif echo "$found_folders" | grep -q "ct8.pl"; then
               #echo "未找到包含 'ct8.pl' 的文件夹。"
-              SERV_DOMAIN="${USER}.ct8.pl"
+              SERV_DOMAIN="${USER,,}.ct8.pl"
           fi
       fi
 
