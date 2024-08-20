@@ -97,7 +97,20 @@ install_socks5(){
     CURL_OUTPUT=$(curl -s 4.ipw.cn --socks5 $SOCKS5_USER:$SOCKS5_PASS@localhost:$SOCKS5_PORT)
     if [[ $CURL_OUTPUT =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
       echo "代理创建成功，返回的IP是: $CURL_OUTPUT"
-      echo "socks://${SOCKS5_USER}:${SOCKS5_PASS}@${CURL_OUTPUT}:${SOCKS5_PORT}"
+      SERV_DOMAIN=$CURL_OUTPUT
+      # 查找并列出包含用户名的文件夹
+      found_folders=$(find "$DOMAIN_PATH" -type d -name "*$USER*")
+      if [ -n "$found_folders" ]; then
+          if echo "$found_folders" | grep -q "serv00.net"; then
+              #echo "找到包含 'serv00.net' 的文件夹。"
+              SERV_DOMAIN="${USER}.serv00.net"
+          elif echo "$found_folders" | grep -q "ct8.pl"; then
+              #echo "未找到包含 'ct8.pl' 的文件夹。"
+              SERV_DOMAIN="${USER}.ct8.pl"
+          fi
+      fi
+
+      echo "socks://${SOCKS5_USER}:${SOCKS5_PASS}@${SERV_DOMAIN}:${SOCKS5_PORT}"
     else
       echo "代理创建失败，请检查自己输入的内容。"
     fi
