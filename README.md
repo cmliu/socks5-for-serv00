@@ -1,7 +1,7 @@
 # socks5-for-serv00
-给 serv00 & ct8 机器一键安装 socks5 & nezha-agent
+在 Serv00 和 CT8 机器上一步到位地安装和配置 SOCKS5 & nezha-agent，并将其用于 cmliu/edgetunnel 项目，帮助解锁 ChatGPT 等服务。通过一键脚本实现代理安装，使用 Crontab 保持进程活跃，并借助 GitHub Actions 实现帐号续期与自动化管理，确保长期稳定运行。
 
-## 如何使用？
+## 如何使用？ [视频教程](https://youtu.be/L6gPyyD3dUw)
 
 ### nohup模式
 - 一键安装 **新手小白用这个！**
