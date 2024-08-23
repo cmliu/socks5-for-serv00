@@ -12,8 +12,8 @@ echo -e "\e[32m
 
 # 获取当前用户名
 USER=$(whoami)
-WORKDIR="/home/${USER,,}/.nezha-agent"
-FILE_PATH="/home/${USER,,}/.s5"
+WORKDIR="/home/${USER}/.nezha-agent"
+FILE_PATH="/home/${USER}/.s5"
 
 ###################################################
 
@@ -99,7 +99,7 @@ install_socks5(){
       echo "代理创建成功，返回的IP是: $CURL_OUTPUT"
       SERV_DOMAIN=$CURL_OUTPUT
       # 查找并列出包含用户名的文件夹
-      found_folders=$(find "/home/${USER,,}/domains" -type d -name "*${USER,,}*")
+      found_folders=$(find "/home/${USER}/domains" -type d -name "*${USER,,}*")
       if [ -n "$found_folders" ]; then
           if echo "$found_folders" | grep -q "serv00.net"; then
               #echo "找到包含 'serv00.net' 的文件夹。"
