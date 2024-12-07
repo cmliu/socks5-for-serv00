@@ -118,9 +118,24 @@ install_socks5(){
 }
 
 download_agent() {
-    DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_freebsd_amd64.zip"
+    echo "请选择 nezha-agent 被控版本："
+    echo "1. release 最新版本"
+    echo "2. v0.20.5 兼容版本"
+    read -p "请选择(回车使用最新版本)：" nezhaAgentVersion
+    nezhaAgentVersion=${nezhaAgentVersion:-1}
+    
+    # 根据用户选择设置下载链接
+    if [ "$nezhaAgentVersion" = "1" ]; then
+        DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_freebsd_amd64.zip"
+    elif [ "$nezhaAgentVersion" = "2" ]; then
+        DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/download/v0.20.5/nezha-agent_freebsd_amd64.zip"
+    else
+        echo "输入无效,将使用最新版本"
+        DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_freebsd_amd64.zip"
+    fi
+    # 使用wget下载,如果下载失败则执行以下操作
     if ! wget -qO "$ZIP_FILE" "$DOWNLOAD_LINK"; then
-        echo 'error: Download failed! Please check your network or try again.'
+        echo '错误: 下载失败! 请检查您的网络连接或稍后重试。'
         return 1
     fi
     return 0
