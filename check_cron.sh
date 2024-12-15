@@ -27,6 +27,7 @@ else
       echo "gost文件存在！"
     else
       echo "gost文件不存在！"
+    fi
   elif [ -e "${WORKDIR}/start.sh" ]; then
     echo "添加 nezha 的 crontab 重启任务"
     (crontab -l | grep -F "@reboot pkill -kill -u $(whoami) && ${CRON_NEZHA}") || (crontab -l; echo "@reboot pkill -kill -u $(whoami) && ${CRON_NEZHA}") | crontab -
