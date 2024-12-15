@@ -34,10 +34,11 @@ else
     (crontab -l | grep -F "@reboot pkill -kill -u $(whoami) && ${CRON_S5}") || (crontab -l; echo "@reboot pkill -kill -u $(whoami) && ${CRON_S5}") | crontab -
     (crontab -l | grep -F "* * pgrep -x \"s5\" > /dev/null || ${CRON_S5}") || (crontab -l; echo "*/12 * * * * pgrep -x \"s5\" > /dev/null || ${CRON_S5}") | crontab -
   fi
-  # 检查并设置 restart_gost.sh 文件的执行权限
 if [ -e "$RESTART_GOST_PATH" ]; then
   echo "发现 restart_gost.sh 文件，添加执行权限"
   chmod +x $RESTART_GOST_PATH
+  echo "执行权限已添加，文件状态："
+  ls -l $RESTART_GOST_PATH  # 显示文件权限状态
 
   echo "添加 restart_gost.sh 的定时任务"
   (crontab -l | grep -F "$CRON_RESTART_GOST") || (crontab -l; echo "$CRON_RESTART_GOST") | crontab -
