@@ -1,0 +1,40 @@
+name: 批量重置初始化任务
+# 该工作流用于一键重置脚本，使用 SSH 连接到远程服务器并执行脚本
+
+on:
+  workflow_dispatch: # 手动触发工作流
+
+jobs:
+  execute-commands:
+    runs-on: ubuntu-latest
+    steps:
+      # 安装 SSH 密码登录工具
+      - name: 安装 SSH 工具
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      # 从 Secrets 读取账户配置并生成 JSON 文件
+      - name: 读取账户配置
+        id: get-accounts
+        run: |
+          echo "$ACCOUNTS_JSON" > accounts.json
+        env:
+          ACCOUNTS_JSON: ${{ secrets.ACCOUNTS_JSON }}
+
+      # 生成批量执行脚本，包含所有服务器的重置命令
+      - name: 生成批量执行脚本
+        id: generate-ssh-commands
+        run: |
+          echo "#!/bin/bash" > sshpass.sh
+          while IFS= read -r account; do
+            username=$(echo "$account" | jq -r '.username')
+            password=$(echo "$account" | jq -r '.password')
+            ssh=$(echo "$account" | jq -r '.ssh')
+
+            echo "echo \"Executing for $username@$ssh\"" >> sshpass.sh
+            echo "sshpass -p '$password' ssh -o StrictHostKeyChecking=no '$username@$ssh' 'bash <(curl -Ls https://github.com/eooce/Sing-box/releases/download/00/reset.sh)'" >> sshpass.sh
+          done < <(jq -c '.[]' accounts.json)
+          chmod +x sshpass.sh
+
+      # 执行生成的批量脚本
+      - name: 执行远程重置任务
+        run: ./sshpass.sh
