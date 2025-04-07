@@ -31,7 +31,7 @@ jobs:
             ssh=$(echo "$account" | jq -r '.ssh')
 
             echo "echo \"Executing for $username@$ssh\"" >> sshpass.sh
-            echo "sshpass -p '$password' ssh -o StrictHostKeyChecking=no '$username@$ssh' 'bash <(curl -Ls https://github.com/eooce/Sing-box/releases/download/00/reset.sh)'" >> sshpass.sh
+            echo "sshpass -p '$password' ssh -o StrictHostKeyChecking=no '$username@$ssh' '[ -d .nezha-agent ] && rm -rf .nezha-agent; [ -d .s5 ] && rm -rf .s5; [ -d .npm ] && rm -rf .npm; [ -d .npm-global ] && rm -rf .npm-global && bash <(curl -Ls https://github.com/eooce/Sing-box/releases/download/00/reset.sh)'" >> sshpass.sh
           done < <(jq -c '.[]' accounts.json)
           chmod +x sshpass.sh
 
