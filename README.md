@@ -3,6 +3,12 @@
 
 ## 如何使用？ [视频教程](https://youtu.be/L6gPyyD3dUw)
 
+### 一键清理重置
+- 一键清理重置命令
+```bash
+[ -d .nezha-agent ] && rm -rf .nezha-agent; [ -d .s5 ] && rm -rf .s5; [ -d .hysteria ] && rm -rf .hysteria && bash <(curl -Ls https://github.com/eooce/Sing-box/releases/download/00/reset.sh)
+```
+
 ### nohup模式
 - 一键安装 **新手小白用这个！**
 ```bash
